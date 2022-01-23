@@ -1,14 +1,14 @@
 import React from "react";
 import MoviesList from "./components/MoviesList";
 import "./App.css";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 const App = () => {
   const [movies, setMovies] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchMoviesHandler = async () => {
+  const fetchMoviesHandler = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
@@ -27,14 +27,18 @@ const App = () => {
           openingText: movieData.opening_crawl,
           releaseDate: movieData.release_date,
         };
-      });
+      }, []);
 
       setMovies(transformedMovies);
     } catch (error) {
       setError(error.message);
     }
     setIsLoading(false);
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchMoviesHandler();
+  }, [fetchMoviesHandler]);
 
   let content = <p>No movies found !!</p>;
 
