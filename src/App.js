@@ -1,6 +1,6 @@
+import "./App.css";
 import React from "react";
 import MoviesList from "./components/MoviesList";
-import "./App.css";
 import { useState, useEffect, useCallback } from "react";
 
 const App = () => {
@@ -20,6 +20,17 @@ const App = () => {
 
       const data = await response.json();
 
+      // const loadedMovies = [];
+
+      // for (const key in data) {
+      //   loadedMovies.push({
+      //     id: key,
+      //     title: data[key].title,
+      //     openingText: data[key].openingText,
+      //     releaseDate: data[key].releaseDate,
+      //   });
+      // }
+
       const transformedMovies = data.results.map((movieData) => {
         return {
           id: movieData.episode_id,
@@ -27,9 +38,10 @@ const App = () => {
           openingText: movieData.opening_crawl,
           releaseDate: movieData.release_date,
         };
-      }, []);
+      });
 
       setMovies(transformedMovies);
+      //
     } catch (error) {
       setError(error.message);
     }
@@ -39,6 +51,23 @@ const App = () => {
   useEffect(() => {
     fetchMoviesHandler();
   }, [fetchMoviesHandler]);
+
+  //* if want to use firebase as a backend for displaying list of data
+
+  // const addMovieHandler = async (movie) => {
+  //   const response = await fetch(
+  //     "https://starwars-postreq-default-rtdb.firebaseio.com/movies.json",
+  //     {
+  //       method: "POST",
+  //       body: JSON.stringify(movie),
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //     }
+  //   );
+  //   const data = await response.json();
+  //   console.log(data);
+  // };
 
   let content = <p>No movies found !!</p>;
 
@@ -55,12 +84,12 @@ const App = () => {
   }
 
   return (
-    <React.Fragment>
+    <>
       <section>
         <button onClick={fetchMoviesHandler}>Fetch Movies</button>
       </section>
       <section>{content}</section>
-    </React.Fragment>
+    </>
   );
 };
 
